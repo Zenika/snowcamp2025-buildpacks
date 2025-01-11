@@ -1,20 +1,20 @@
 # Buildpack demo
 
-## Choose builder
+## Build images
+
+### Choose a builder
 
 ```bash
 pack builder suggest
 ```
 
-## Build images
-
-### Node backend
+### Build node backend
 
 ```bash
 pack build snowcamp-node-backend --builder=paketobuildpacks/builder-jammy-base --path ./node-backend/
 ```
 
-### Node frontend with NGINX
+### Build node frontend with NGINX
 
 Build it with
 
@@ -34,7 +34,7 @@ Also, clean sources
 pack build snowcamp-node-frontend --builder=paketobuildpacks/builder-jammy-base --path ./node-frontend/ --env BP_INCLUDE_FILES='dist/node-frontend/browser/*'
 ```
 
-### Springboot application
+### Build springboot application
 
 Build it with
 
@@ -42,9 +42,42 @@ Build it with
 pack build snowcamp-springboot-backend --builder paketobuildpacks/builder-jammy-base --path springboot-backend/
 ```
 
+## Cache
+
+### Local cache
+
+```bash
+docker volume ls
+# create container with volume and look inside
+cat "sha256:....tar" | tar tvf -
+```
 
 ## Inspect images
 
 ```bash
 pack inspect snowcamp-node-frontend
-``` 
+```
+
+## Rebase image 
+
+Build with old run image 
+
+```
+pack build snowcamp-springboot-backend --builder paketobuildpacks/builder-jammy-base --path springboot-backend --run-image paketobuildpacks/run-jammy-base:0.0.1
+```
+
+Scan vulnerabilities
+
+```bash
+trivy image snowcamp-springboot-backend --severity HIGH,CRITICAL
+```
+
+
+Do rebase
+
+```bash
+pack rebase snowcamp-springboot-backend --run-image paketobuildpacks/run-jammy-base:latest --force
+```
+
+Scan it now
+

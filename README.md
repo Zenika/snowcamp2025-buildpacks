@@ -5,6 +5,7 @@
 * [docker](https://docs.docker.com/engine/install/)
 * [pack cli](https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/#pack-cli)
 * [trivy](https://trivy.dev/v0.18.3/installation/)
+* curl and jq
 
 ## Build images
 
@@ -48,8 +49,6 @@ Build it with
 pack build snowcamp-springboot-backend --builder paketobuildpacks/builder-jammy-base --path springboot-backend/
 ```
 
-## Cache
-
 ### Local cache
 
 ```bash
@@ -58,7 +57,7 @@ docker volume ls
 cat "sha256:....tar" | tar tvf -
 ```
 
-## Inspect images
+### Inspect images
 
 ```bash
 pack inspect snowcamp-node-frontend
@@ -87,3 +86,27 @@ pack rebase snowcamp-springboot-backend --run-image paketobuildpacks/run-jammy-b
 
 Scan it now
 
+## Collaboration en environment variables
+
+
+```bash
+docker run --rm -p 8080:8080 snowcamp-springboot-backend:latest 
+```
+
+Run 
+
+```bash
+curl http://localhost:8080/actuator/env | jq '.propertySources[] | select(.name == "systemEnvironment")| .properties.JAVA_TOOL_OPTIONS.value'
+```
+
+Add builder opentelemetry
+
+```
+pack build snowcamp-springboot-backend --builder paketobuildpacks/builder-jammy-base --path springboot-backend -e BP_OPENTELEMETRY_ENABLED=true --buildpack paketo-buildpacks/java@17.4.0  --buildpack paketo-buildpacks/opentelemetry@2.7.0
+```
+
+Look at runtime `JAVA_TOOL_OPTIONS` environment again. Run container providing a `JAVA_TOOL_OPTIONS`.
+
+```bash
+docker run --rm -p 8080:8080 -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m" snowcamp-springboot-backend:latest
+```

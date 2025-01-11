@@ -1,5 +1,11 @@
 # Buildpack demo
 
+## Tools needed
+
+* [docker](https://docs.docker.com/engine/install/)
+* [pack cli](https://buildpacks.io/docs/for-platform-operators/how-to/integrate-ci/pack/#pack-cli)
+* [trivy](https://trivy.dev/v0.18.3/installation/)
+
 ## Build images
 
 ### Choose a builder

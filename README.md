@@ -7,6 +7,8 @@
 * [trivy](https://trivy.dev/v0.18.3/installation/)
 * curl and jq
 
+For ubuntu, a [script](./init-vm.sh) is provided.
+
 ## Build images
 
 ### Choose a builder
@@ -110,3 +112,5 @@ Look at runtime `JAVA_TOOL_OPTIONS` environment again. Run container providing a
 ```bash
 docker run --rm -p 8080:8080 -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m" snowcamp-springboot-backend:latest
 ```
+
+You may also init a new buildpack with `pack buildpack new` and put `sleep` command in both `detect` and `build` scripts and connect to running containers to look into produced layers.

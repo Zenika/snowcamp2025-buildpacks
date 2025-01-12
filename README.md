@@ -113,4 +113,10 @@ Look at runtime `JAVA_TOOL_OPTIONS` environment again. Run container providing a
 docker run --rm -p 8080:8080 -e JAVA_TOOL_OPTIONS="-Xms256m -Xmx512m" snowcamp-springboot-backend:latest
 ```
 
+See append files
+
+```bash
+docker container run --rm --entrypoint bash -u 0   snowcamp-springboot-backend -c "find /layers/ -type f -name JAVA_TOOL_OPTIONS.append -exec cat {} \; -exec echo '' \; -print"
+```
+
 You may also init a new buildpack with `pack buildpack new` and put `sleep` command in both `detect` and `build` scripts and connect to running containers to look into produced layers.

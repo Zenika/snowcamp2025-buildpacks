@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get install wget apt-transport-https gnupg ca-certificates curl jq
+sudo apt-get install -y wget apt-transport-https gnupg ca-certificates curl jq
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key -o /etc/apt/keyrings/aquasecurity.asc
@@ -16,13 +16,14 @@ echo \
   $(. /etc/os-release && echo "$VERSION_CODENAME") main" | \
   sudo tee -a /etc/apt/sources.list.d/trivy.list
 
-sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+sudo add-apt-repository -y ppa:cncf-buildpacks/pack-cli
 
 sudo apt-get update
 
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin pack-cli trivy
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin pack-cli trivy
 
 sudo groupadd docker || true
 sudo usermod -aG docker $USER
 
-
+# Refresh user groups
+newgrp docker

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get install -y wget apt-transport-https gnupg ca-certificates curl jq
+sudo apt-get install -y tree wget apt-transport-https gnupg ca-certificates curl jq
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key -o /etc/apt/keyrings/aquasecurity.asc
@@ -24,6 +24,14 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 sudo groupadd docker || true
 sudo usermod -aG docker $USER
+
+# Dive installation
+DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+curl -OL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb
+sudo apt install -y ./dive_${DIVE_VERSION}_linux_amd64.deb && rm ./dive_${DIVE_VERSION}_linux_amd64.deb
+
+# Install grype 
+curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sudo sh -s -- -b /usr/local/bin
 
 # Refresh user groups
 newgrp docker

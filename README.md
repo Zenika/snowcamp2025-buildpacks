@@ -120,3 +120,23 @@ docker container run --rm --entrypoint bash -u 0   snowcamp-springboot-backend -
 ```
 
 You may also init a new buildpack with `pack buildpack new` and put `sleep` command in both `detect` and `build` scripts and connect to running containers to look into produced layers.
+
+## SBOM
+
+Download SBOM from the built image:
+
+```bash
+pack sbom download snowcamp-springboot-backend
+```
+
+Show the downloaded files:
+
+```bash
+tree layers
+```
+
+Scan with your favorite SBOM tool. Example with [grype](https://github.com/anchore/grype/):
+
+```bash
+find ./layers -name 'sbom.syft.json' -exec grype sbom:{} \;
+```
